@@ -1,23 +1,23 @@
 services:
-  # Backend Service
   - type: web
     name: sophie-lamour-backend
     runtime: python
     plan: free
+    region: oregon
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
-      - key: MONGO_URL
-        sync: false
       - key: DB_NAME
         value: sophie_coaching
+      - key: MONGO_URL
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
-    healthCheckPath: /api/health
