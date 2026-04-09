@@ -4,8 +4,9 @@ services:
     name: sophie-lamour-backend
     runtime: python
     plan: free
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -20,13 +21,3 @@ services:
       - key: ADMIN_PASSWORD
         sync: false
     healthCheckPath: /api/health
-
-  # Frontend Static Site (Optional - can use Vercel instead)
-  - type: static
-    name: sophie-lamour-frontend-alt
-    runtime: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: ./frontend/build
-    envVars:
-      - key: REACT_APP_API_URL
-        value: https://sophie-lamour-backend.onrender.com
