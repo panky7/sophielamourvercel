@@ -1,0 +1,32 @@
+services:
+  # Backend Service
+  - type: web
+    name: sophie-lamour-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: sophie_coaching
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+    healthCheckPath: /api/health
+
+  # Frontend Static Site (Optional - can use Vercel instead)
+  - type: static
+    name: sophie-lamour-frontend-alt
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://sophie-lamour-backend.onrender.com
